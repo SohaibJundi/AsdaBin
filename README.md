@@ -17,6 +17,7 @@ A simple tool to deal with Asda .bin files.
    
 
    Note 1: This feature works only for single file.
+
    Note 2: If version is known, it will be selected automatically.
 
 
