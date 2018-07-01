@@ -151,7 +151,7 @@ namespace AsdaBin
           }
           else
           {
-            MessageBox.Show("You did not select path to save the file!\n", "Aborted", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            MessageBox.Show("You did not select path to save the file!", "Aborted", MessageBoxButtons.OK, MessageBoxIcon.Warning);
           }
         }
       }
@@ -169,7 +169,7 @@ namespace AsdaBin
         }
         else
         {
-          MessageBox.Show("You did not select path to save the files!\n", "Aborted", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+          MessageBox.Show("You did not select path to save the files!", "Aborted", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
       }
     }
