@@ -37,7 +37,7 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EncryptionHelper.cs" />
+    <Compile Include="CryptHelper.cs" />
     <Compile Include="form_Main.cs">
       <SubType>Form</SubType>
     </Compile>

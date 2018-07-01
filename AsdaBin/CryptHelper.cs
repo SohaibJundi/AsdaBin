@@ -3,9 +3,8 @@ using System.Linq;
 
 namespace AsdaBin
 {
-  class EncryptionHelper
+  class CryptHelper
   {
-
     public enum Version
     {
       asda2EnglishPrivate,
@@ -28,46 +27,69 @@ namespace AsdaBin
       new byte[] { 0xBC, 0xD0, 0x27, 0x02, 0x6B }
     };
 
-    private static void Xor(byte[] bytes, int v)
+    private static byte[] Xor(byte[] bytes, byte[] key)
     {
       for (int i = 0; i < bytes.Length; i++)
-        bytes[i] = (byte)(keys[v][(byte)i] ^ bytes[i]);
-    }
-
-    public static byte[] decryptBin(byte[] bytes, Version v)
-    {
-      bytes = bytes.Skip(5).ToArray();
-      Xor(bytes, (int)v);
+      {
+        bytes[i] = (byte)(key[(byte)i] ^ bytes[i]);
+      }
 
       return bytes;
     }
 
-    public static byte[] decryptBin(string fileName, Version v)
+    private static byte[] decryptBin(byte[] bytes, Version v)
     {
-      byte[] bytes = File.ReadAllBytes(fileName);
-
-      return decryptBin(bytes, v);
+      return Xor(bytes.Skip(5).ToArray(), keys[(int)v]);
     }
 
-    public static byte[] encryptBin(byte[] bytes, Version v)
+    public static byte[] decryptBin(string fileName, Version v)
     {
-      Xor(bytes, (int)v);
+      return decryptBin(File.ReadAllBytes(fileName), v);
+    }
 
-      return headers[(int)v].Concat(bytes).ToArray();
+    private static byte[] encryptBin(byte[] bytes, Version v)
+    {
+      return headers[(int)v].Concat(Xor(bytes, keys[(int)v])).ToArray();
     }
 
     public static byte[] encryptBin(string fileName, Version v)
     {
-      byte[] bytes = File.ReadAllBytes(fileName);
+      return encryptBin(File.ReadAllBytes(fileName), v);
+    }
 
-      return encryptBin(bytes, v);
+    private static byte[] convertBin(byte[] bytes, Version from, Version to)
+    {
+      if (from == to)
+      {
+        return bytes;
+      }
+      else
+      {
+        byte[] key = new byte[256];
+
+        for (int i = 0; i < key.Length; i++)
+        {
+          key[i] = (byte)(keys[(int)from][i] ^ keys[(int)to][i]);
+        }
+        
+        return headers[(int)to].Concat(Xor(bytes.Skip(5).ToArray(), key)).ToArray();
+      }
+    }
+
+    public static byte[] convertBin(string fileName, Version from, Version to)
+    {
+      return convertBin(File.ReadAllBytes(fileName), from, to);
     }
 
     public static int detectVersion(byte[] binFile)
     {
       for (int i = 0; i < headers.Length; i++)
+      {
         if (binFile.Take(5).SequenceEqual(headers[i]))
+        {
           return i;
+        }
+      }
 
       return -1;
     }
