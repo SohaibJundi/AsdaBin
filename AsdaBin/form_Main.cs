@@ -38,15 +38,22 @@ namespace AsdaBin
     private void form_Main_DragDrop(object sender, DragEventArgs e)
     {
       string[] droppedData = (string[])e.Data.GetData(DataFormats.FileDrop);
-      txt_path.Text = droppedData[0];
-
-      if (Directory.Exists(txt_path.Text))
+      if (droppedData == null)
       {
-        rdbtn_Directory.Checked = true;
+        MessageBox.Show("You must drop a file or directory!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
       }
       else
       {
-        rdbtn_File.Checked = true;
+        if (Directory.Exists(txt_path.Text))
+        {
+          rdbtn_Directory.Checked = true;
+        }
+        else
+        {
+          rdbtn_File.Checked = true;
+        }
+        
+        txt_path.Text = droppedData[0];
       }
     }
 
